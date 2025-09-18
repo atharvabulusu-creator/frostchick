@@ -1294,16 +1294,31 @@ backdrop-filter: blur(15px);
   });
 </script>
 <script>
-    function updateTime() {
-  var date = new Date();
-  var options = { hour: 'numeric', minute: 'numeric',  hour12: true };
-  var formattedTime = date.toLocaleTimeString('en-US', options);
-  document.getElementById("wtime").innerHTML = formattedTime;
+  function updateTime() {
+    const date = new Date();
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const formattedTime = date.toLocaleTimeString('en-US', options);
+
+    const hour = date.getHours();
+    let emoji = "⏰";
+
+    if (hour >= 5 && hour < 12) {
+      emoji = "🌅"; 
+    } else if (hour >= 12 && hour < 17) {
+      emoji = "🌞"; 
+    } else if (hour >= 17 && hour < 21) {
+      emoji = "🌇"; 
+    } else {
+      emoji = "🌙"; 
+    }
+
+    document.getElementById("wtime").innerHTML = `${formattedTime} ${emoji}`;
   }
 
-    setInterval(updateTime, 1000); 
-
+  setInterval(updateTime, 1000);
+  updateTime(); 
 </script>
+
 
 <script>
   function admin(){
