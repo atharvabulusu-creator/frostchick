@@ -109,7 +109,15 @@
 .close-btn:hover {
     color: #ff0000; /* Change color on hover */
 }
-
+ .full-btn {
+    background: none;
+    border: none;
+    color: rgb(26, 255, 0);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    font-size:20px;
+} 
   img {
     width: 35px;
     padding: 10px 20px;
@@ -792,6 +800,8 @@ backdrop-filter: blur(7px);
 </div>
 <div id="hiddenDiv">
   <button class="close-btn" onclick="document.getElementById('hiddenDiv').style.display = 'none';">●</button>
+    <button class="close-btn" onclick="fullscreenIframe()">●</button>
+
   <button class="back" style="top:10px; left: 50px; position: fixed; color:white;"    onclick="document.getElementById('frame2').src = 'test99.html';">←</button>
 <h3 style="  left: 50%; color:white; top:-9.5px; position: absolute;   transform: translateX(-50%);      " >Games</h3>
 <h3  id="fpsCounter" style="  left: 80%; color:white; top:-9.5px; position: absolute;   transform: translateX(-80%);      " ></h3>
@@ -865,6 +875,21 @@ function trackFPS() {
 
 requestAnimationFrame(trackFPS);
 </script>
+
+  <script>
+    function fullscreenIframe() {
+      let iframe = document.getElementById("frame2");
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.mozRequestFullScreen) { 
+        iframe.mozRequestFullScreen();
+      } else if (iframe.webkitRequestFullscreen) { 
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) { 
+        iframe.msRequestFullscreen();
+      }
+    }
+  </script>
  
            
 </div>
