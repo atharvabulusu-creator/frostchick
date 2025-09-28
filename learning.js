@@ -1,5 +1,5 @@
 var win = window.open();
-var url = "thetestbase99.html";
+var url = "t9os.html";
 var faviconUrl = "favicon.png"; 
 
 // Transitions to the learning site named T9 OS

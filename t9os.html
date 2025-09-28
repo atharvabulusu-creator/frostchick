@@ -16,14 +16,7 @@
 <title>T9 OS</title>
 
     
-<div class="bg-animation">
-  <div id='stars'></div>
-  <div id='stars2'></div>
-  <div id='stars3'></div>
-  <div id='stars4'></div>
-</div><!-- / STAR ANIMATION -->
 
-</div>
 
 
 <style>
@@ -38,6 +31,12 @@
   padding: 0;
   font-family: Arial, sans-serif;
   text-decoration: none;
+  }
+  a{
+    outline:none;
+  }
+  a:focus{
+    outline:none;
   }
 
   /* Clock Styles */
@@ -71,21 +70,21 @@
     position: fixed;
     bottom: 10px;
     left: 0;
-    width: 25%;
-    background-color: #2d2d2d;
-    border-radius: 20px;
-    gap: 30px;
+    width: 19%;
+    background-color: #161616;
+    border-radius: 20px 20px 20px 20px;
+    gap: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
-    opacity:60%;
+    height: 45px;
+    opacity:65%;
     left: 50%;
     transform: translateX(-50%); 
-    box-shadow: 0px 4px 12px #2d2d2d;
+    box-shadow: 0px 4px 12px #000000;
     outline: #f9f9f9;
     outline-width: 3px;
-
+    border: 1.5px solid #000000;
 
 
   
@@ -93,19 +92,28 @@
   .close-btn {
     background: none;
     border: none;
-    color: white;
+    color: rgb(255, 0, 0);
     font-size: 24px;
     cursor: pointer;
     padding: 0;
     font-size:20px;
-}
+} 
 
 .close-btn:hover {
     color: #ff0000; /* Change color on hover */
 }
-
+ .full-btn {
+    background: none;
+    border: none;
+    color: rgb(26, 255, 0);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    font-size:20px;
+    top:-0.5;
+} 
   img {
-    width: 35px;
+    width: 28px;
     padding: 10px 20px;
     border-radius: 25px;
     transition: transform 0.3s ease-in-out;
@@ -138,27 +146,28 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+background-color: #1b1b1bbd;
+border: 1px solid rgb(34, 34, 34);   
     color: white;
     inset: 0;
     margin:auto;
     position: fixed;
     z-index: 1000;
-    border-radius:20px; 
-    opacity:80%; 
-    width:85%;
-    height: 73%; 
+    border-radius:30px; 
+    width:95%;
+    height: 77%; 
     overflow-x: hidden;
     overflow-y: auto;
-    box-shadow: 0px 4px 12px #1f1f1f;
-      animation: popIn 0.5s ease-out forwards;
+box-shadow: 2px #141414;
+      animation: popIn2 0.5s ease-out forwards;
 
   }
   #settingsDiv {
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);   
     color: white;
     inset: 0;
     margin:auto;
@@ -177,7 +186,8 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+    background: rgba(0,0,0,0.4);   
+backdrop-filter: blur(7px);   
     color: white;
     inset: 0;
     margin:auto;
@@ -195,7 +205,8 @@
     #updateDiv {
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);  
     color: white;
     inset: 0;
     margin:auto;
@@ -210,11 +221,31 @@
       animation: popIn 0.5s ease-out forwards;
 
   }
+    #widgetDiv {
+    margin-top: 20px;
+    padding: 10px;
+    background: rgba(0,0,0,0.4);    
+backdrop-filter: blur(7px);   
+    color: white;
+   right:50px;
+   top:50px;
+    position: fixed;
+    z-index: 1000;
+    border-radius:20px; 
+    opacity:85%; 
+    width:150px;
+    height: 150px; 
+    overflow-x: hidden;
+    overflow-y: auto;
+      animation: popIn 0.5s ease-out forwards;
+
+  }
   #collabDiv {
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);   
     color: white;
     inset: 0;
     margin:auto;
@@ -233,7 +264,28 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);  
+    color: white;
+    inset: 0;
+    margin:auto;
+    position: fixed;
+    z-index: 1000;
+    border-radius:20px; 
+    opacity:85%; 
+    width:600px;
+    height: 500px; 
+    overflow-x: hidden;
+    overflow-y: auto;
+      animation: popIn 0.5s ease-out forwards;
+
+  }
+   #hacksDiv {
+    display: none;
+    margin-top: 20px;
+    padding: 10px;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);  
     color: white;
     inset: 0;
     margin:auto;
@@ -252,7 +304,8 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+   background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);  
     color: white;
     inset: 0;
     margin:auto;
@@ -271,7 +324,8 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+   background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);    
     color: white;
     inset: 0;
     margin:auto;
@@ -290,7 +344,8 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);   
     color: white;
     inset: 0;
     margin:auto;
@@ -308,6 +363,7 @@
 
   /* Logo Styles */
   #logo {
+    display:none;
     inset: 0;
     margin:auto;
       position:fixed;
@@ -330,13 +386,14 @@
 
     
   }
-  .btn {
+   .btn {
     width: 150px;
     height: 150px;
-    border-radius: 50px ; /* Add !important to ensure it overrides other styles */
+    border-radius: 200px ; /* Add !important to ensure it overrides other styles */
     gap: 150px;
     transition: transform 0.3s ease-in-out;
     font-family: sans-serif;
+      transition: all 0.3s ease;   /* smooth hover */
     font-size: 15px;
 }
 
@@ -344,20 +401,22 @@
     transform: translateY(-3px);
     box-shadow: none;
     border-radius: 50px !important; /* Ensure hover state also has the same border-radius */
+
 }
      .gtext{
           text-align:center;
           font-family: sans-serif;
-          background-color:rgb(34, 34, 34);
+background:none;  
+border-radius: 20px;           
           color:#ffffff;
-          border-radius: 15px;
                   
      }
      #leaderboardDiv {
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);   
     color: white;
     inset: 0;
     margin:auto;
@@ -391,9 +450,21 @@
         transform: scale(1);
       }
     }
+     @keyframes popIn2 {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 100%;
+        transform: scale(1);
+      }
+    }
+  
 #searchBar{
   text-align:center;
-  background-color: #141414;
+  background: rgba(0, 0, 0, 0.3); 
+border: 1px solid rgba(255, 255, 255, 0.15);  
   color: white;
   border-radius: 15px;
   position: absolute;
@@ -434,7 +505,7 @@
 
 <!-- Hidden Div -->
 <div id="appsDiv">
-  <button class="close-btn" onclick="document.getElementById('appsDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('appsDiv').style.display = 'none';">●</button>
   <h1 class="gtext"> Apps </h1>
   <p color="white" text-align="center">Warning if it says page not found refresh then it should work</p>
 
@@ -460,7 +531,7 @@
 </div>
 
 <div id="collabDiv">
-  <button class="close-btn" onclick="document.getElementById('collabDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('collabDiv').style.display = 'none';">●</button>
   <h1 class="gtext"> Partners </h1>
   <p color="white" style="text-align: center;">They are partners not sponsers</p>
 
@@ -483,21 +554,17 @@
 </div>
 
 <div id="updateDiv">
-  <button class="close-btn" onclick="document.getElementById('updateDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('updateDiv').style.display = 'none';">●</button>
   <h1 class="gtext"> Updates</h1>
-<h1 style="text-align: center;">Version 1.52</h1>
-    <h3 style="text-align: center; color:white;">New update: A bunch of games has been fixed</h3>
-      <h3 style="text-align: center; color:white;">T9 OS V2 is expected to be done in a week or more. So sorry for not updating I'm working on V2</h3>
-      <h3 style="text-align: center; color:white;">V2 will make it harder for schools to block T9 OS. It will also have a ton of new games.</h3>
-            <h3 style="text-align: center; color:white;">Join our discord server to get updates.</h3>
+<h1 style="text-align: center;">Version 2 (Beta)</h1>
+    <h3 style="text-align: center; color:white;">New update: New UI changes, new widget, new anti blocker system, and new games everyday new games are added</h3>
+        <h3 style="text-align: center; color:white;">New update: I also added a new Hacks/Bookmarklets UI where it has AutoClicker, Edit Anything, Blooket Hacks and more</h3>
+
+    <h3 style="text-align: center; color:white;">This is a beta so it might have some glitches</h3>
+
+        <h3 style="text-align: center; color:white;">If you would like to help out T9 OS please join our patreon membership. Thank you!</h3>
 
 
-      <h3 style="text-align: center; color:white;"></h3>
-
-
-
-
-  <h3 style="text-align: center; color:white;">And ima try to host events in T9 OS too maybe next week.</h3>
 
 
 
@@ -514,8 +581,31 @@
           
 </div>
 
+<div id="widgetDiv">
+  <button class="close-btn" onclick="document.getElementById('widgetDiv').style.display = 'none';">●</button>
+
+
+
+      <h2 style="    transform: translateX(-50%); top:20px; position:fixed; left:50%; text-align:center; color:white; ">People Online: <span id="count">0</span></h2>
+
+
+    
+
+
+
+
+
+
+
+
+        
+       
+
+          
+</div>
+
 <div id="ChatDiv">
-  <button class="close-btn" onclick="document.getElementById('ChatDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('ChatDiv').style.display = 'none';">●</button>
 
 
  
@@ -534,7 +624,8 @@
     display: none;
     margin-top: 20px;
     padding: 10px;
-    background-color: #141414;
+     background: rgba(0,0,0,0.4);   
+backdrop-filter: blur(7px);   
     color: white;
     inset: 0;
     margin:auto;
@@ -556,22 +647,22 @@
            
 </div>
 
-<div id="soundDiv">
-  <button class="close-btn" onclick="document.getElementById('soundDiv').style.display = 'none';">×</button>
-  <h1 class="gtext"> Soundboard </h1>
-  <p color="white" style="text-align: center;"></p>
+<div id="hacksDiv">
+  <button class="close-btn" onclick="document.getElementById('soundDiv').style.display = 'none';">●</button>
+  <h1 class="gtext"> Bookmarklets </h1>
+  <p color="white" style="text-align: center;">Drag the buttons to ur bookmarks bar.</p>
+    <p color="white" style="text-align: center;">For Blooket hacks do not drag it instead click on it and follow the instructions.</p>
 
-          
-      <button class="btn" data-sound="bruh.mp3">Bruh</button>
 
-    <button class="btn" data-sound="boom.mp3">Vine boom</button>
-
-    <button class="btn" data-sound="indian.mp3">Indian music</button>
-
-    <button class="btn" data-sound="tacobell.mp3">Taco Bell bong</button>
-
-    <button class="btn" data-sound="fart.mp3">Loud Fart</button>
-
+          <a href="javascript:(function(x,y){if(!window.click){window.click=!0,document.body.style.cursor='crosshair';var cps=prompt('Autoclicker CPS: (Under 200 recommended)');if(!cps||isNaN(cps)?(alert(%27You entered something wrong. Try running the script again.%27),end()):alert(%27Autoclicker activated at %27+cps+%27 CPS! Do [ctrl+e] to stop.%27),addEventListener(%27mousemove%27,e=>{x=e.clientX,y=e.clientY}),addEventListener(%27keydown%27,e=>{%27e%27===e.key&&e.ctrlKey&&(alert(%27Autoclicker deactivated! Click the bookmark again to reactivate!%27),end())}),window.click)var int=setInterval(function(){var e=document.elementFromPoint(x,y);e&&e.click()},1e3/cps);function end(){clearInterval(int),window.click=!1,document.body.style.cursor=%27default%27}}})();">
+      <button class="btn" >AutoClicker</button>
+      </a>
+<a href="javascript:if(document.body.contentEditable !== 'true') {    document.body.contentEditable = 'true'; document.designMode='on'; void 0} else {    document.body.contentEditable = 'false'; document.designMode='off'; void 0}">
+      <button class="btn" >Edit Anything</button>
+      </a>
+   <a href="blk.html">
+      <button class="btn" >Blooket Hacks</button>
+      </a>
         <script>
         const buttons = document.querySelectorAll('.btn');
 
@@ -590,14 +681,16 @@
      
         
        
+
+          
+</div>
+
 <script>
   function Chat(){
     const div = document.getElementById('ChatDiv');
     div.style.display = div.style.display === 'block' ? 'none' : 'block';
   }
 </script>
-          
-</div>
 
 <div id="emulatorDiv">
   <button class="close-btn" onclick="document.getElementById('emulatorDiv').style.display = 'none';">×</button>
@@ -627,43 +720,9 @@
           
 </div>
 
-<div id="adminDiv">
-  <button class="close-btn" onclick="document.getElementById('adminDiv').style.display = 'none';">×</button>
-  &nbsp;&nbsp;&nbsp;&nbsp; <!-- Adds manual spacing -->
-  
-<style>
-  .warn{
-    top:0;
-    font-family: sans-serif;
-    position: absolute;
-    right:0;
-  }
-
-  </style>
-  <p class="warn"></p>
-
-  <iframe class="frame" src="/sorry.html"></iframe>
-  <style>
-    .frame{
-      width:100%;
-      height:95%;
-      bottom:0;
-      position: absolute;
-      border:none;
-      border-radius:0px 0px 20px 20px;
-      left:0;
-    }
-  </style>
-           
-     
-        
-       
-
-          
-</div>
 
 <div id="searchDiv">
-  <button class="close-btn" onclick="document.getElementById('searchDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('searchDiv').style.display = 'none';">●</button>
   &nbsp;&nbsp;&nbsp;&nbsp; <!-- Adds manual spacing -->
   <a href='/t9os.html'>
     <button class="close-btn">refresh</button>
@@ -700,7 +759,7 @@
 </div>
 
 <div id="leaderboardDiv">
-  <button class="close-btn" onclick="document.getElementById('leaderboardDiv').style.display = 'none';">×</button>
+  <button class="close-btn" onclick="document.getElementById('leaderboardDiv').style.display = 'none';">●</button>
 
 
  
@@ -759,388 +818,107 @@
  
 </style>
 
-<div id="hiddenDiv">
-  
-  <button class="close-btn" onclick="document.getElementById('hiddenDiv').style.display = 'none';">×</button>
-  <input  type="text" id="searchBar" placeholder="Search games by name...">
 
-
-
-     <h1 class="gtext">Games</h1>
-
-     <div id="imageContainer">
-  <a href="https://forms.gle/idyRqPcwSoj5Mmjv6">
-    <img class="btn" src="https://reider71164.github.io/images/gamerequest.png">
-         </a>
-            <a href='/terms.html'>
-    <img class="btn" src="TERM.png" alt="terms">
-         </a>
-    <a href='/usservice.html'>
-    <img class="btn" src="among.webp" alt="among us">
-         </a>
-    
-    <a href='/crossy.html'>
-    <img class="btn" src="crossy.jpg" alt="crossy road">
-         </a>
-         
-         <a href='/cookie.html'>
-    <img class="btn" src="cookie.png" alt="cookie clicker">
-         </a>
-    
-   
-     
-    
-     <a href='/ninjanf.html'>
-    <img class="btn" src="fninja.jpg" alt="fruit ninja">
-         </a>
-         
-          <a href='/dino.html'>
-    <img class="btn" src="dino.png" alt="dinosour game">
-         </a>
-         
-      
-    <a href='/run.html'>
-    <img class="btn" src="run.png" alt="run">
-         </a>
-         
-         
-          
-    <a href='/run2.html'>
-    <img class="btn" src="run2.png" alt="run 2">
-         </a>
-         
-         <a href='/2048.html'>
-    <img class="btn" src="2048.png" alt="2048">
-         </a>
-         
-          <a href='/wheels.html'>
-    <img class="btn" src="wheels.png"alt="happy wheels">
-         </a>
-    
-     <a href='/baldi.html'>
-    <img class="btn" src="baldi.png" alt="baldi">
-         </a>
-    
-
-         
-          <a href='/slope.html'>
-    <img class="btn" src="slope1.png" alt="slope">
-         </a>
-   
-         
-            <a href='/roblox.html'>
-    <img class="btn" src="roblox.png" alt="roblox">
-         </a>
-         
-         
-        <a href='/fnaf.html'>
-    <img class="btn" src="fnaf.png" alt="fnaf" alt="five nights at freddy">
-         </a>
-         
-          <a href='/run3.html'>
-    <img class="btn" src="run3.png" alt="run 3">
-         </a>
-         
-          <a href='/temple.html'>
-    <img class="btn" src="temple.png" alt="temple run">
-         </a>
-         
-         <a href='/tetris.html'>
-    <img class="btn" src="tetris.png" alt="tetris">
-         </a>
-         
-         <a href='/minecraft.html'>
-    <img class="btn" src="mine.png" alt="eaglercraft">
-         </a>
-         
-         <a href='/stickhook.html'>
-    <img class="btn" src="stickhook.png" alt="stickman hook">
-         </a>
-         
-        
-         
-          <a href='/core.html'>
-    <img class="btn" src="core.png" alt="core ball">
-         </a>
-    
-         
-        
-         
-         <a href='/stack.html'>
-    <img class="btn" src="stack.png" alt="stack block">
-         </a>
-         
-          <a href='/flip.html'>
-    <img class="btn" src="flip.png" alt="just flip">
-         </a>
-         
-         <a href='/gta5.html'>
-    <img class="btn" src="gta6.png" alt="gta">
-         </a>
-         
-         <a href='/box.html'>
-    <img class="btn" src="https://cdn2.steamgriddb.com/thumb/c442b40dabc7f4bda930bef2b5d100fc.jpg" alt="incredibox">
-         </a>
-         
-         <a href='/soccer.html'>
-    <img class="btn" src="football.png" alt="football legends">
-         </a>
-         
-         <a href='/shortlife.html'>
-    <img class="btn" src="shortlife.png" alt="short life">
-         </a>
-         
-          <a href='/manic.html'>
-    <img class="btn" src="manic.png" alt="moto maniac">
-         </a>
-         
-         <a href='/slope2.html'>
-             <img class="btn" src="slope2.png" alt="slope 2">
-         </a>
-         
-         <a href='/thrill.html'>
-             <img class="btn" src="thrill.png" alt="aqua thrill">
-         </a>
-         
-         <a href='/shortride.html'>
-             <img class="btn" src="shortlife.png" alt="short ride">
-         </a>
-         
-         <a href='/stair.html'>
-             <img class="btn" src="stair.png" alt="stair race 3d">
-         </a>
-         
-          <a href='/blight.html'>
-             <img class="btn" src="blight.png">
-         </a>
-         
-          <a href='/vex.html'>
-             <img class="btn" src="vex4.png" alt="vex 4">
-         </a>
-    
-    <a href='/hallow.html'>
-             <img class="btn" src="https://i.ibb.co/dmBbf5s/Screenshot-2024-04-10-7-06-13-PM.png" alt="secrets of hallowland">
-         </a>
-      
-            <a href='/tapgoal.html'>
-             <img class="btn" src="tap.webp" alt="tap goal">
-         </a>
-    </a>
-    <a href='/snowrider.html'>
-     <img class="btn" src="/img/snow.png" alt="snow rider">
-    </a>
-    <a href='/rocketsoccer.html'>
-         <img class="btn" src="img/soccer.png" alt="rocket soccer">
-    </a>
-        <a href='/superhot.html'>
-         <img class="btn" src="/img/superhot.png" alt="super hot">
-        </a> 
-             <a href='/funnyshooter.html'>
-         <img class="btn" src="funny.png" alt="funny shooter 2">
-        </a>
-                <a href='/icedodo.html'>
-         <img class="btn" src="ice.jpg" alt="ice dodo">
-        </a>
-                   <a href='/eggy-car-main/eggy-car-main/frame.html'>
-         <img class="btn" src="eggy.jpg" alt="eggy car">
-        </a>
-        <a href='/holeio.html'>
-          <img class="btn" src="holeio.png" alt="hole.io">
-         </a>
-       
-         <a href='/dmad.html'>
-          <img class="btn" src="dmad.png" alt="drive mad">
-         </a>
-         <a href='/cubeshot.html'>
-          <img class="btn" src="cubeshot.png" alt="cubeshot">
-         </a>
-         <a href='/1v1.html'>
-          <img class="btn" src="1v1.jpg" alt="1v1 lol">
-         </a>
-         <a href='/bitlifeService.html'>
-          <img class="btn" src="bitlife.png" alt="bitlife">
-         </a>
-         <a href='/jet.html'>
-          <img class="btn" src="jet.png" alt="jetpack joyride">
-         </a>
-         <a href='/kartz.html'>
-          <img class="btn" src="smash.png" alt="smash kartz">
-         </a>
-         <a href='/ovo.html'>
-          <img class="btn" src="ovo.png" alt="ovo">
-         </a>
-         <a href='/granny.html'>
-          <img class="btn" src="granny.png" alt="granny">
-         </a>
-         <a href='/grandvegas.html'>
-          <img class="btn" src="grandvegas.png" alt="grand vegas">
-         </a>    
-         <a href='/polytrack.html'>
-          <img class="btn" src="polytrack.png" alt="polytrack">
-         </a>   
-         <a href='/subwayhw.html'>
-          <img class="btn" src="subwayHW.png" alt="subway surfers">
-         </a>  
-         <a href='/basket.html'>
-          <img class="btn" src="basketL.png" alt="basketball legends">
-         </a>   
-         <a href='/timeshooter3.html'>
-          <img class="btn" src="timeshooter.png" alt="timeshooter 3">
-         </a>   
-         <a href='/moneyroll.html'>
-          <img class="btn" src="moneyroll.png" alt="money roll">
-         </a>   
-         <a href='/backrooms.html'>
-          <img class="btn" src="backrooms.png" alt="backrooms">
-         </a> 
-         <a href='/fnaf2.html'>
-          <img class="btn" src="fnaf2.png" alt="fnaf2" alt="five nights at freddys 2">
-         </a> 
-         <a href='/bowl.html'>
-          <img class="btn" src="bowl.png" alt="retro bowl">
-         </a>  
-         <a href='/uno.html'>
-          <img class="btn" src="uno.png" alt="uno">
-         </a>  
-         <a href='/burgeria.html'>
-          <img class="btn" src="burgeria.png" alt="burgeria">
-         </a>   
-         <a href='/pou.html'>
-          <img class="btn" src="pou.png" alt="pou">
-         </a>  
-         <a href='/johnny.html'>
-          <img class="btn" src="johnny.png" alt="johnny">
-         </a>  
-         <a href='/robber.html'>
-          <img class="btn" src="robber2.png" alt="bob the robber 2">
-         </a>  
-         <a href='/wordle.html'>
-          <img class="btn" src="wordle.png" alt="wordle">
-         </a>  
-         <a href='/onlyup.html'>
-          <img class="btn" src="onlyup.png" alt="onlyup">
-         </a> 
-         <a href='/tinyfishing.html'>
-          <img class="btn" src="fishing.png" alt="tinyfishing">
-         </a> 
-         <a href='/goball.html'>
-          <img class="btn" src="goball.png" alt="goball">
-         </a> 
-         
-         <a href='/helix.html'>
-          <img class="btn" src="helix.png" alt="helix">
-         </a> 
-         <a href='/hohazards.html'>
-          <img class="btn" src="hohazards.png" alt="house of hazards">
-         </a> 
-          
-         <a href='/president.html'>
-          <img class="btn" src="president.png" alt="president simulator">
-         </a> 
-         <a href='/pokemon.html'>
-          <img class="btn" src="pokemon.png" alt="pokemon red">
-         </a> 
-         <a href='/granny2.html'>
-          <img class="btn" src="granny2.png" alt="granny 2">
-         </a> 
-         <a href='/hunter.html'>
-          <img class="btn" src="hunter.png" alt="drift hunter">
-         </a> 
-         <a href='/just.html'>
-          <img class="btn" src="just.png" alt="just fall">
-         </a> 
-         <a href='/pacman.html'>
-          <img class="btn" src="pacman.png" alt="pacman">
-         </a> 
-         <a href='/knife.html'>
-          <img class="btn" src="knife.png" alt="knife hit">
-         </a> 
-         <a href="https://t9lat22.github.io/crazycattle3d/.html">
-          <img class="btn" src="sheep.png" alt="Crazy Cattle 3D">
-         </a> 
-         <a href='/window.html'>
-          <img class="btn" src="window.png" alt="The man from the window">
-         </a> 
-         <a href='/capybara.html'>
-          <img class="btn" src="capybara.png" alt="capybara clicker">
-         </a> 
-         <a href='/balditrip.html'>
-          <img class="btn" src="balditrip.png" alt="Baldi field trip">
-         </a> 
-         <a href='/basketrandom.html'>
-          <img class="btn" src="basketrandom.png" alt="Basket Random">
-         </a> 
-         <a href='/deathrun.html'>
-          <img class="btn" src="deathrun.png" alt="death run 3d">
-         </a> 
-         <a href='/axe.html'>
-          <img class="btn" src="axe.png" alt="axe random">
-         </a> 
-         <a href='/motox3m.html'>
-          <img class="btn" src="moto.png" alt="moto x3m">
-         </a> 
-         <a href='/driftboss.html'>
-          <img class="btn" src="driftboss.png" alt="drift boss">
-         </a> 
-         <a href='/bullet.html'>
-          <img class="btn" src="bullet.png" alt="mr bullet">
-         </a> 
-         <a href="/volleyball-random/index.html">
-          <img class="btn" src="volleyball.png" alt="volleyball random">
-         </a> 
-           <a href='/granny2.html'>
-          <img class="btn" src="granny2.png" alt="Granny 2">
-         </a>
-         <a href='/draw.html'>
-          <img class="btn" src="draw.png" alt="draw climber">
-         </a>  
-          <a href='/snowball.html'>
-          <img class="btn" src="snow.png" alt="snowball.io">
-         </a>  
-          <a href='/duel.html'>
-          <img class="btn" src="duel.png" alt="stickman duel battle">
-         </a>  
-          <a href='/pixel.html'>
-          <img class="btn" src="pixel.png" alt="Pixel gun 3d">
-         </a>  
-            <a href='/duck.html'>
-          <img class="btn" src="duck.png" alt="duck life">
-         </a>  
-         <a href='/riddle.html'>
-          <img class="btn" src="riddle.png" alt="riddle school">
-         </a>  
-            <a href='/riddle2.html'>
-          <img class="btn" src="riddle2.png" alt="riddle school 2">
-         </a>  
-           <a href='/riddle3.html'>
-          <img class="btn" src="riddle3.png" alt="riddle school 3">
-         </a> 
-          <a href='/barry.html'>
-          <img class="btn" src="barry.png" alt="barry prison">
-         </a> 
-           <a href='/brainrot.html'>
-          <img class="btn" src="brainrot.png" alt="steal a brainrot">
-         </a> 
-          <a href='/golf.html'>
-          <img class="btn" src="golf.png" alt="battle golf">
-         </a> 
-            <a href='/worldcup.html'>
-          <img class="btn" src="worldcup.png" alt="a small world cup">
-         </a> 
-            <a href='/snakeio.html'>
-          <img class="btn" src="snakeio.png" alt="snake.io">
-         </a> 
-          <a href='/speedstars.html'>
-          <img class="btn" src="speedstars.png" alt="speed stars">
-         </a> 
-          
-
-
-</div>
    
              
 </div>
+<div id="hiddenDiv">
+  <button class="close-btn" onclick="document.getElementById('hiddenDiv').style.display = 'none';">●</button>
+    <button class="full-btn" onclick="fullscreenIframe()">●</button>
 
+  <button class="back" style="top:10px; left: 50px; position: fixed; color:white;"    onclick="document.getElementById('frame2').src = 'test99.html';">←</button>
+<h3 style="  left: 50%; color:white; top:-9.5px; position: absolute;   transform: translateX(-50%);      " >Games</h3>
+<h3  id="fpsCounter" style="  left: 80%; color:white; top:-9.5px; position: absolute;   transform: translateX(-80%);      " ></h3>
+ 
+
+
+
+<iframe id="frame2" src="test99.html"></iframe>
+  <style>
+    #frame2{
+      width:100%;
+      height:95%;
+      bottom:0;
+      position: absolute;
+      border:none;
+      border-radius:0px 0px 20px 20px;
+      left:0;
+      border-top: 8px white;
+    }
+    .back {
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    font-size:20px;
+        transform: translateY(2px);
+        top:-2px;
+
+}
+     #ChatDiv {
+    display: none;
+    margin-top: 20px;
+    padding: 10px;
+     background: rgba(0,0,0,0.4);   
+backdrop-filter: blur(7px);   
+    color: white;
+    inset: 0;
+    margin:auto;
+    position: fixed;
+    z-index: 1000;
+    border-radius:20px; 
+    opacity:85%; 
+    width:85%;
+    height: 73%; 
+    overflow-x: hidden;
+    overflow-y: auto;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+      animation: popIn 0.5s ease-out forwards;
+
+  }
+  </style>
+
+  <script>
+let lastTime = performance.now();
+let frameCount = 0;
+let fps = 0;
+
+function trackFPS() {
+  frameCount++;
+  const now = performance.now();
+  const delta = now - lastTime;
+  if (delta >= 1000) { 
+    fps = Math.round((frameCount * 1000) / delta);
+    document.getElementById('fpsCounter').innerText = 'FPS: ' + fps;
+    frameCount = 0;
+    lastTime = now;
+  }
+  requestAnimationFrame(trackFPS);
+}
+
+requestAnimationFrame(trackFPS);
+</script>
+
+  <script>
+    function fullscreenIframe() {
+      let iframe = document.getElementById("frame2");
+      if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+      } else if (iframe.mozRequestFullScreen) { 
+        iframe.mozRequestFullScreen();
+      } else if (iframe.webkitRequestFullscreen) { 
+        iframe.webkitRequestFullscreen();
+      } else if (iframe.msRequestFullscreen) { 
+        iframe.msRequestFullscreen();
+      }
+    }
+  </script>
+ 
+           
+</div>
 
 <div class="tnav">
 
@@ -1168,15 +946,17 @@
     <img class="timg" src="collab.png">
   </a>
 
+    
     <a onclick="sound()">
     <img class="timg" src="music.png">
   </a>
 
- 
-    <a onclick="admin()">
-    <img class="timg" src="admin2.png">
+  
+    <a onclick="hacks()">
+    <img class="timg" src="hacks.png">
   </a>
 
+ 
 
   <h2 class="battery" id="batteryPercentage"></h2>
   <div class="clock" id="time"></div>
@@ -1194,7 +974,9 @@
   
    <label class="label" for="background-select">Select Background:</label>
 <select id="background-select">
-  <option value="purplecity2.png">Default</option>
+  <option value="abstract.png">Default</option>
+                  <option value="purplecity2.png">T9 OS city</option>
+
                 <option value="toyota.jpg">Toyota GR supra</option>
 
               <option value="car.jpeg">Hennessey Venom F5 car</option>
@@ -1282,6 +1064,32 @@
     }
   });
 </script>
+<script>
+  function updateTime() {
+    const date = new Date();
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    const formattedTime = date.toLocaleTimeString('en-US', options);
+
+    const hour = date.getHours();
+    let emoji = "⏰";
+
+    if (hour >= 5 && hour < 12) {
+      emoji = "🌅"; 
+    } else if (hour >= 12 && hour < 17) {
+      emoji = "🌞"; 
+    } else if (hour >= 17 && hour < 21) {
+      emoji = "🌇"; 
+    } else {
+      emoji = "🌙"; 
+    }
+
+    document.getElementById("wtime").innerHTML = `${formattedTime} ${emoji}`;
+  }
+
+  setInterval(updateTime, 1000);
+  updateTime(); 
+</script>
+
 
 <script>
   function admin(){
@@ -1289,6 +1097,45 @@
     div.style.display = div.style.display === 'block' ? 'none' : 'block';
   }
 </script>
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, onDisconnect, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // 🔥 Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDB4VU2JNQGO5pMgXGaasIiY6kFxgsb-84",
+      authDomain: "chat-99dfe.firebaseapp.com",
+      databaseURL: "https://chat-99dfe-default-rtdb.firebaseio.com",
+      projectId: "chat-99dfe",
+      storageBucket: "chat-99dfe.firebasestorage.app",
+      messagingSenderId: "17277094525",
+      appId: "1:17277094525:web:989d19d04fdde769de7f14",
+      measurementId: "G-NEXJFPJPCP"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Reference for connections
+    const connectionsRef = ref(db, "connections");
+
+    // Create a new unique connection for THIS user
+    const myConnection = push(connectionsRef);
+
+    // Mark myself as connected
+    set(myConnection, true);
+
+    // Remove me when I disconnect
+    onDisconnect(myConnection).remove();
+
+    // Update live user count
+    onValue(connectionsRef, (snapshot) => {
+      document.getElementById("count").innerText = snapshot.size ?? snapshot.numChildren();
+    });
+  </script>
 
 <script>
   function emulator(){
@@ -1305,6 +1152,12 @@
   }
 </script>
 
+<script>
+  function hacks(){
+    const div = document.getElementById('hacksDiv');
+    div.style.display = div.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
 
 
 <script>
@@ -1428,10 +1281,10 @@ if (selectedBackground) {
   const img = document.getElementById("logo");
 
   btn.addEventListener("click", () => {
-    if (img.style.display === "none") {
-      img.style.display = "block"; 
+    if (img.style.display === "block") {
+      img.style.display = "none"; 
     } else {
-      img.style.display = "none";  
+      img.style.display = "block";  
     }
   });
 </script>
@@ -1458,6 +1311,22 @@ if (selectedBackground) {
       measurementId: "G-NEXJFPJPCP"
     };
 
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const imgBox = document.getElementById("imgBox");
+
+    // Listen to changes in globalImage in real-time
+    const imageRef = ref(db, "globalImage");
+    onValue(imageRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.url) {
+        imgBox.innerHTML = `<img src="${data.url}">`;
+      } else {
+        imgBox.innerHTML = "";
+      }
+    });
   </script>
   <style>
       #imgBox img {
@@ -1471,22 +1340,18 @@ if (selectedBackground) {
     }
   </style>
 
-
-<script>
-  // If no background is saved yet, set default
-  if (!localStorage.getItem("bg")) {
-    localStorage.setItem("bg", "url('purplecity2.png') no-repeat center center fixed");
-  }
-
-  // Always apply the saved background
-  document.body.style.background = localStorage.getItem("bg");
-  document.body.style.backgroundSize = "cover"; // makes sure image fits screen
-</script>
-
-
 </body>
 
+<script>
 
+  if (!localStorage.getItem("bg")) {
+    localStorage.setItem("bg", "url('abstract.png') no-repeat center center fixed");
+  }
+
+ 
+  document.body.style.background = localStorage.getItem("bg");
+  document.body.style.backgroundSize = "cover"; 
+</script>
 
 
 </head>
@@ -1496,3 +1361,4 @@ if (selectedBackground) {
 
 </body>
 </html>
+
