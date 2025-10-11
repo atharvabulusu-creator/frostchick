@@ -1,195 +1,699 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T9 OS</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T9 OS 2.0 — Upgraded Launcher</title>
+<style>
+  /* ------------------------------
+     Basic resets & variables
+     ------------------------------ */
+  :root{
+    --bg-dark:#0b0b0d;
+    --panel:#0f0f13;
+    --muted:#9aa0a6;
+    --accent:#7b3cff;
+    --glass: rgba(255,255,255,0.03);
+    --card: rgba(255,255,255,0.02);
+    --text:#ffffff;
+    --radius:12px;
+  }
+  [data-theme="light"]{
+    --bg-dark:#f5f6f8;
+    --panel:#ffffff;
+    --muted:#586069;
+    --accent:#5b21b6;
+    --glass: rgba(0,0,0,0.04);
+    --card: rgba(0,0,0,0.03);
+    --text:#0b0b0d;
+  }
 
-    body {
-      background-color: #0e0e0e;
-      background-size: cover;
-      background-position: center;
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding-top: 80px;
-      transition: background-image 0.4s ease;
-    }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;font-family:Inter, "Segoe UI", Roboto, system-ui, Arial;
+    background:var(--bg-dark); color:var(--text); overflow:hidden;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  }
 
-    h1 {
-      font-size: 2.2em;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px #111;
-    }
+  /* Wallpaper layer */
+  #wallpaper{
+    position:fixed; inset:0; z-index:0; background-size:cover;
+    background-position:center; transition:filter .35s ease, opacity .35s ease;
+    filter:brightness(.7) contrast(1.03);
+  }
+  /* overlay to darken or show tint if light theme */
+  #wallOverlay{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,0.25),rgba(0,0,0,0.25));pointer-events:none;}
 
-    .search-box {
-      display: flex;
-      align-items: center;
-      background-color: #1a1a1a;
-      border: 2px solid #2f2f2f;
-      border-radius: 50px;
-      padding: 10px 20px;
-      width: 320px;
-      transition: border 0.2s ease;
-    }
+  /* Desktop container */
+  .desktop{position:relative; z-index:2; height:100vh; display:flex; flex-direction:column; justify-content:flex-end;}
 
-    .search-box:hover {
-      border-color: #555;
-    }
+  /* Viewer area (center top) */
+  .viewerArea{position:relative; z-index:2; padding:28px; padding-bottom:110px; height:calc(100vh - 110px); overflow:auto;}
+  .viewerCard{width:100%; max-width:1200px; margin:0 auto; background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.01)); border-radius:14px; padding:18px; min-height:260px; box-shadow:0 18px 60px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.02); display:flex; gap:14px; align-items:center;}
+  .viewerLeft{flex:1}
+  .viewerRight{width:420px;max-width:40%}
 
-    input {
-      flex: 1;
-      background: none;
-      border: none;
-      color: #fff;
-      outline: none;
-      font-size: 1em;
-    }
+  .bigTitle{font-size:22px;font-weight:700; letter-spacing:.6px}
+  .muted{color:var(--muted); font-size:13px}
 
-    button {
-      background-color: #222;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      font-size: 20px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+  /* Search / URL */
+  .searchRow{display:flex; gap:10px; margin-top:12px}
+  .searchRow input{flex:1;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);outline:none;font-size:15px}
+  .searchBtn{padding:10px 14px;border-radius:999px;border:0;background:linear-gradient(180deg,var(--accent), #4e12d8); color:#fff;font-weight:700;cursor:pointer}
 
-    button:hover {
-      background-color: #333;
-    }
+  /* apps / quick */
+  .quickGrid{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px}
+  .quick{background:var(--panel); border-radius:10px;padding:10px 12px; display:flex; gap:10px; align-items:center; cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+  .quick:hover{transform:translateY(-4px); transition:transform .15s}
+  .quick .emoji{font-size:20px}
 
-    .games {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 20px;
-      width: 80%;
-      max-width: 800px;
-    }
+  /* taskbar (bottom) */
+  .taskbar{position:fixed; left:50%; transform:translateX(-50%); bottom:14px; z-index:5;
+           background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.35));
+           border:1px solid rgba(255,255,255,0.03); padding:8px 14px; border-radius:20px; display:flex; gap:12px; align-items:center; min-width:360px; backdrop-filter:none}
+  .tb-left, .tb-center, .tb-right{display:flex; gap:10px; align-items:center}
+  .tb-center{margin:0 12px}
+  .tb-btn{background:transparent;border:0;padding:8px;border-radius:10px;color:var(--text);cursor:pointer;font-size:16px}
+  .tb-btn:hover{background:var(--glass)}
+  .tb-chip{background:var(--panel); padding:6px 10px;border-radius:10px; font-size:13px; color:var(--muted); border:1px solid rgba(255,255,255,0.02)}
 
-    .game {
-      background-color: #1a1a1a;
-      border-radius: 12px;
-      text-align: center;
-      padding: 15px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-    }
+  /* windows */
+  .window{position:fixed; z-index:10; min-width:320px; max-width:92vw; background:var(--panel); border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03); overflow:hidden; display:flex; flex-direction:column}
+  .winHeader{display:flex; align-items:center; gap:8px; padding:10px 12px; cursor:grab; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-bottom:1px solid rgba(255,255,255,0.02)}
+  .winTitle{font-weight:700; font-size:14px}
+  .winBtns{margin-left:auto; display:flex; gap:6px}
+  .tinyBtn{background:transparent;border:0;padding:6px;border-radius:6px;cursor:pointer}
+  .winBody{padding:12px}
 
-    .game:hover {
-      background-color: #2a2a2a;
-      transform: translateY(-3px);
-    }
+  /* apps grid */
+  .appsGrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px}
+  .appTile{background:var(--card); padding:12px;border-radius:10px;text-align:center; cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+  .appTile:hover{transform:translateY(-6px); transition:transform .12s}
 
-    .game img {
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-    }
+  /* notes / files */
+  textarea{width:100%; min-height:160px; border-radius:8px; padding:10px; border:1px solid rgba(0,0,0,0.06); background:transparent;color:var(--text); outline:none; resize:vertical}
 
-    .taskbar {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 20px;
-      display: flex;
-      gap: 15px;
-      padding: 8px 15px;
-      align-items: center;
-    }
+  /* viewer iframe */
+  .browserFrame{width:100%; height:360px; border:0; background:#000; border-radius:8px; overflow:hidden}
+  .mini{width:220px}
 
-    .taskbar button {
-      background: #222;
-      border-radius: 10px;
-      padding: 5px 10px;
-      font-size: 0.9em;
-    }
+  /* small form */
+  .row{display:flex; gap:8px; align-items:center}
+  select,input[type="text"]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04); background:transparent;color:var(--text)}
 
-    .taskbar button:hover {
-      background: #333;
-    }
-  </style>
+  /* responsive */
+  @media (max-width:900px){
+    .viewerCard{flex-direction:column}
+    .viewerRight{width:100%;max-width:100%}
+    .taskbar{left:12px;transform:none; bottom:12px; right:12px; width:auto}
+  }
+</style>
 </head>
-<body>
-  <h1>T9 OS</h1>
+<body data-theme="dark">
 
-  <div class="search-box">
-    <input id="search" type="text" placeholder="Search games or type a link...">
-    <button onclick="openTab()">+</button>
+<!-- Wallpaper & overlay -->
+<div id="wallpaper"></div>
+<div id="wallOverlay"></div>
+
+<div class="desktop" role="application" aria-label="T9 OS">
+
+  <!-- Top viewer area -->
+  <div class="viewerArea">
+    <div class="viewerCard" role="main" aria-label="T9 OS main card">
+      <div class="viewerLeft">
+        <div class="bigTitle">T9 OS</div>
+        <div class="muted">A faster, cleaner mini OS for games & apps</div>
+
+        <div class="searchRow" style="margin-top:14px">
+          <input id="urlInput" placeholder="Paste a URL or type a search (Ctrl+K)">
+          <button class="searchBtn" id="openUrlBtn">Open</button>
+        </div>
+
+        <div class="quickGrid" id="quickGrid" aria-hidden="false" style="margin-top:12px">
+          <!-- quick buttons injected by JS -->
+        </div>
+
+        <div style="margin-top:14px" class="muted">Tip: Drag any window by its header. Press Ctrl+N -> new T9 tab. Ctrl+K -> focus search.</div>
+      </div>
+
+      <div class="viewerRight">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="muted">Live Viewer</div>
+          <div>
+            <button class="tb-btn" id="openGamesBtn" title="Open Games">🎮 Games</button>
+            <button class="tb-btn" id="openFilesBtn" title="Open Files">📁 Files</button>
+          </div>
+        </div>
+
+        <iframe id="viewerFrame" class="browserFrame" src="about:blank" title="T9 OS viewer"></iframe>
+
+        <div style="margin-top:10px; display:flex; gap:8px;">
+          <button class="tb-btn" id="openDiscord">💬 Discord</button>
+          <button class="tb-btn" id="openYouTube">▶ YouTube</button>
+          <button class="tb-btn" id="openPatreon">❤️ Support</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="games">
-    <div class="game" onclick="openGame('https://example.com/game1')">
-      <img src="https://i.imgur.com/t9bFZbA.png" alt="Game 1">
-      <p>Game 1</p>
+  <!-- Taskbar -->
+  <div class="taskbar" role="toolbar" aria-label="Taskbar">
+    <div class="tb-left">
+      <button class="tb-btn" id="startBtn" title="Start">☰</button>
+      <button class="tb-btn" id="homeBtn" title="Home">🏠</button>
     </div>
-    <div class="game" onclick="openGame('https://example.com/game2')">
-      <img src="https://i.imgur.com/kc6yo4E.png" alt="Game 2">
-      <p>Game 2</p>
+
+    <div class="tb-center">
+      <div class="tb-chip" id="openTabsCount">Tabs: 0</div>
     </div>
-    <div class="game" onclick="openGame('https://example.com/game3')">
-      <img src="https://i.imgur.com/DqPbXvF.png" alt="Game 3">
-      <p>Game 3</p>
+
+    <div class="tb-right">
+      <div class="tb-chip" id="clock">--:--</div>
+      <div class="tb-chip" id="battery">—%</div>
+      <button class="tb-btn" id="themeToggle" title="Toggle theme">🌗</button>
+      <button class="tb-btn" id="settingsBtn" title="Settings">⚙️</button>
     </div>
   </div>
+</div>
 
-  <div class="taskbar">
-    <button onclick="changeWallpaper()">🖼️ Wallpaper</button>
-    <button onclick="openTab()">➕ New Tab</button>
+<!-- Templates for windows (hidden initially) -->
+<!-- Apps/Launcher window -->
+<div id="appsWindow" class="window" style="display:none; width:720px; height:420px; left:calc(50% - 360px); top:80px;">
+  <div class="winHeader">
+    <div class="winTitle">Apps</div>
+    <div class="winBtns">
+      <button class="tinyBtn" data-close>✖</button>
+    </div>
   </div>
+  <div class="winBody">
+    <div class="appsGrid" id="appsGrid">
+      <!-- app tiles injected by JS -->
+    </div>
+  </div>
+</div>
 
-  <script>
-    const search = document.getElementById("search");
-    const wallpapers = [
-      "https://i.imgur.com/bZ9wYhQ.jpeg",
-      "https://i.imgur.com/kY4L6Fq.jpeg",
-      "https://i.imgur.com/gKDh8wC.jpeg",
-      "https://i.imgur.com/7gh9kEh.jpeg"
-    ];
-    let currentWallpaper = 0;
+<!-- Games window -->
+<div id="gamesWindow" class="window" style="display:none; width:820px; height:520px; left:calc(50% - 410px); top:60px;">
+  <div class="winHeader">
+    <div class="winTitle">Games</div>
+    <div class="winBtns">
+      <button class="tinyBtn" data-close>✖</button>
+    </div>
+  </div>
+  <div class="winBody" style="display:flex; flex-direction:column; gap:10px;">
+    <div style="display:flex; gap:8px; align-items:center;">
+      <input id="gameSearch" placeholder="Search games or paste link..." style="flex:1">
+      <button class="searchBtn" id="gameOpen">Open</button>
+    </div>
 
-    search.addEventListener("keydown", function(e) {
-      if (e.key === "Enter") {
-        let q = search.value.trim();
-        if (q.startsWith("http")) {
-          window.open(q, "_blank");
-        } else {
-          window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank");
-        }
-      }
-    });
+    <div class="appsGrid" id="gamesGrid">
+      <!-- game tiles injected by JS -->
+    </div>
+  </div>
+</div>
 
-    function openTab() {
-      window.open(window.location.href, "_blank");
+<!-- Notes window -->
+<div id="notesWindow" class="window" style="display:none; width:520px; height:420px; left:80px; top:120px;">
+  <div class="winHeader">
+    <div class="winTitle">Notes</div>
+    <div class="winBtns">
+      <button class="tinyBtn" id="saveNotes">💾</button>
+      <button class="tinyBtn" data-close>✖</button>
+    </div>
+  </div>
+  <div class="winBody">
+    <textarea id="notesArea" placeholder="Write notes..."></textarea>
+  </div>
+</div>
+
+<!-- Files window (fake explorer) -->
+<div id="filesWindow" class="window" style="display:none; width:520px; height:420px; left:140px; top:140px;">
+  <div class="winHeader">
+    <div class="winTitle">Files</div>
+    <div class="winBtns">
+      <button class="tinyBtn" data-close>✖</button>
+    </div>
+  </div>
+  <div class="winBody">
+    <div class="muted">This is a lightweight mock file explorer for T9 OS — click to "open".</div>
+    <div style="margin-top:12px; display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
+      <div class="appTile" data-file="screenshot.png">screenshot.png</div>
+      <div class="appTile" data-file="config.txt">config.txt</div>
+      <div class="appTile" data-file="readme.md">readme.md</div>
+      <div class="appTile" data-file="save1.dat">save1.dat</div>
+      <div class="appTile" data-file="avatar.png">avatar.png</div>
+      <div class="appTile" data-file="music.mp3">music.mp3</div>
+    </div>
+  </div>
+</div>
+
+<!-- Music window -->
+<div id="musicWindow" class="window" style="display:none; width:460px; height:240px; left:calc(100% - 520px); top:120px;">
+  <div class="winHeader">
+    <div class="winTitle">Music Player</div>
+    <div class="winBtns">
+      <button class="tinyBtn" data-close>✖</button>
+    </div>
+  </div>
+  <div class="winBody">
+    <div class="row">
+      <input id="audioUrl" placeholder="Paste audio URL (optional)">
+      <button class="searchBtn" id="loadAudio">Load</button>
+    </div>
+    <div style="margin-top:10px">
+      <audio id="audio" controls style="width:100%; background:transparent"></audio>
+    </div>
+    <div class="muted" style="margin-top:8px">Note: To avoid heavy hosting, paste your own audio link (mp3). This player will stream it.</div>
+  </div>
+</div>
+
+<!-- Settings window -->
+<div id="settingsWindow" class="window" style="display:none; width:420px; height:360px; left:60px; top:60px;">
+  <div class="winHeader">
+    <div class="winTitle">Settings</div>
+    <div class="winBtns"><button class="tinyBtn" data-close>✖</button></div>
+  </div>
+  <div class="winBody">
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div class="row">
+        <label class="muted" style="min-width:110px">Theme</label>
+        <select id="themeSelect">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label class="muted" style="min-width:110px">Wallpaper</label>
+        <select id="wallSelect"></select>
+      </div>
+
+      <div class="row">
+        <label class="muted" style="min-width:110px">Homepage</label>
+        <input id="homeUrl" type="text" placeholder="https://t9os.com">
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <button class="searchBtn" id="saveSettings">Save</button>
+        <button class="tb-btn" id="resetSettings">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------------------
+   Data (customize here)
+   --------------------------- */
+const WALLPAPERS = [
+  {id:'aurora', name:'Aurora', url:'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1400&auto=format&fit=crop&s=1c3d471c3a1b8a7f3f3f7d3d9cb21917'},
+  {id:'city', name:'Neon City', url:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1400&auto=format&fit=crop'},
+  {id:'synth', name:'Synthwave', url:'https://images.unsplash.com/photo-1505483531331-3a9b2e0b3d09?q=80&w=1400&auto=format&fit=crop'},
+  {id:'space', name:'Space', url:'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1400&auto=format&fit=crop'},
+  {id:'plain', name:'Solid', url:''} // empty will use color
+];
+
+const APPS = [
+  {name:'Games',icon:'🎮', action:()=>openWindow('gamesWindow')},
+  {name:'Browser',icon:'🌐', action:()=>focusUrlInput()},
+  {name:'Notes',icon:'📝', action:()=>openWindow('notesWindow')},
+  {name:'Files',icon:'📁', action:()=>openWindow('filesWindow')},
+  {name:'Music',icon:'🎵', action:()=>openWindow('musicWindow')},
+  {name:'Settings',icon:'⚙️', action:()=>openWindow('settingsWindow')}
+];
+
+const GAMES = [
+  {name:'T9 Arcade', thumbnail:'https://i.imgur.com/t9bFZbA.png', url:'https://t9os.com/active/iframe#https://t9os.com'},
+  {name:'Fortnite (Play)', thumbnail:'https://i.imgur.com/kc6yo4E.png', url:'https://t9os.com/active/iframe#https://www.xbox.com/en-US/play/games/fortnite/BT5P2X999VH2'},
+  {name:'YouTube', thumbnail:'https://i.imgur.com/DqPbXvF.png', url:'https://t9os.com/active/iframe#https://www.youtube.com'},
+  {name:'TikTok', thumbnail:'https://i.imgur.com/7VdK1vA.png', url:'https://t9os.com/active/iframe#https://www.tiktok.com'},
+];
+
+/* ---------------------------
+   Utilities & DOM refs
+   --------------------------- */
+const wallpaperEl = document.getElementById('wallpaper');
+const wallOverlay = document.getElementById('wallOverlay');
+const urlInput = document.getElementById('urlInput');
+const openUrlBtn = document.getElementById('openUrlBtn');
+const viewerFrame = document.getElementById('viewerFrame');
+const quickGrid = document.getElementById('quickGrid');
+const appsGrid = document.getElementById('appsGrid');
+const gamesGrid = document.getElementById('gamesGrid');
+const gamesWindow = document.getElementById('gamesWindow');
+const appsWindow = document.getElementById('appsWindow');
+const notesWindow = document.getElementById('notesWindow');
+const filesWindow = document.getElementById('filesWindow');
+const musicWindow = document.getElementById('musicWindow');
+const settingsWindow = document.getElementById('settingsWindow');
+const startBtn = document.getElementById('startBtn');
+const openTabsCount = document.getElementById('openTabsCount');
+const clockEl = document.getElementById('clock');
+const batteryEl = document.getElementById('battery');
+const themeToggle = document.getElementById('themeToggle');
+const themeSelect = document.getElementById('themeSelect');
+const wallSelect = document.getElementById('wallSelect');
+const homeUrlInput = document.getElementById('homeUrl');
+const saveSettingsBtn = document.getElementById('saveSettings');
+const resetSettingsBtn = document.getElementById('resetSettings');
+const openGamesBtn = document.getElementById('openGamesBtn');
+const openFilesBtn = document.getElementById('openFilesBtn');
+const openDiscordBtn = document.getElementById('openDiscord');
+const openYouTubeBtn = document.getElementById('openYouTube');
+const openPatreonBtn = document.getElementById('openPatreon');
+const notesArea = document.getElementById('notesArea');
+const saveNotesBtn = document.getElementById('saveNotes');
+const audioEl = document.getElementById('audio');
+const audioUrlInput = document.getElementById('audioUrl');
+const loadAudioBtn = document.getElementById('loadAudio');
+
+let openTabs = [];
+
+/* ---------------------------
+   Persistence (localStorage)
+   --------------------------- */
+const STORAGE = {
+  theme: localStorage.getItem('t9_theme') || 'dark',
+  wallpaper: localStorage.getItem('t9_wall') || WALLPAPERS[0].id,
+  homepage: localStorage.getItem('t9_home') || 'https://t9os.com',
+  notes: localStorage.getItem('t9_notes') || '',
+  audio: localStorage.getItem('t9_audio') || ''
+};
+
+/* ---------------------------
+   Init UI
+   --------------------------- */
+function renderQuick(){
+  quickGrid.innerHTML = '';
+  APPS.slice(0,5).forEach(a=>{
+    const el = document.createElement('div');
+    el.className = 'quick';
+    el.innerHTML = `<div class="emoji">${a.icon}</div><div><div style="font-weight:700">${a.name}</div><div class="muted">Open ${a.name}</div></div>`;
+    el.addEventListener('click', ()=>a.action());
+    quickGrid.appendChild(el);
+  });
+}
+
+function renderAppsGrid(){
+  appsGrid.innerHTML = '';
+  APPS.forEach(a=>{
+    const t = document.createElement('div');
+    t.className = 'appTile';
+    t.innerHTML = `<div style="font-size:22px">${a.icon}</div><div style="font-weight:700;margin-top:6px">${a.name}</div>`;
+    t.addEventListener('click', ()=>a.action());
+    appsGrid.appendChild(t);
+  });
+}
+
+function renderGamesGrid(){
+  gamesGrid.innerHTML = '';
+  GAMES.forEach(g=>{
+    const t = document.createElement('div');
+    t.className = 'appTile';
+    t.innerHTML = `<div style="height:84px;display:flex;align-items:center;justify-content:center"><img src="${g.thumbnail}" alt="${g.name}" style="max-width:100%; max-height:80px; border-radius:8px"></div>
+                   <div style="font-weight:700;margin-top:8px">${g.name}</div>`;
+    t.addEventListener('click', ()=>openInViewer(g.url));
+    gamesGrid.appendChild(t);
+  });
+}
+
+function renderSettingsOptions(){
+  wallSelect.innerHTML = '';
+  WALLPAPERS.forEach(w=> {
+    const o = document.createElement('option'); o.value = w.id; o.textContent = w.name; wallSelect.appendChild(o);
+  });
+  // themeSelect already in DOM
+  themeSelect.value = STORAGE.theme;
+  wallSelect.value = STORAGE.wallpaper;
+  homeUrlInput.value = STORAGE.homepage;
+}
+
+/* ---------------------------
+   Wallpaper & theme
+   --------------------------- */
+function applyWallpaper(id){
+  const w = WALLPAPERS.find(w=>w.id===id) || WALLPAPERS[0];
+  if(w.url){
+    wallpaperEl.style.backgroundImage = `url('${w.url}')`;
+    wallpaperEl.style.backgroundColor = '';
+  } else {
+    wallpaperEl.style.backgroundImage = '';
+    wallpaperEl.style.backgroundColor = STORAGE.theme==='light' ? '#e6e9ef' : '#0c0c0d';
+  }
+  localStorage.setItem('t9_wall', w.id);
+  STORAGE.wallpaper = w.id;
+}
+
+function applyTheme(t){
+  document.body.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  localStorage.setItem('t9_theme', t);
+  STORAGE.theme = t;
+}
+
+/* ---------------------------
+   Window controls & drag
+   --------------------------- */
+function openWindow(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.display = 'flex';
+  el.style.zIndex = 20;
+  // bring to front & focus
+  el.style.left = (window.innerWidth/2 - el.offsetWidth/2) + 'px';
+  el.style.top = (80 + Math.random()*30) + 'px';
+}
+
+/* make close buttons work */
+document.querySelectorAll('[data-close]').forEach(b=>{
+  b.addEventListener('click', ()=> b.closest('.window').style.display='none');
+});
+
+/* draggable windows */
+function makeDraggable(win){
+  const header = win.querySelector('.winHeader');
+  let isDown = false, offsetX=0, offsetY=0;
+  header.addEventListener('mousedown', (e)=>{
+    isDown = true; win.style.cursor='grabbing';
+    const rect = win.getBoundingClientRect();
+    offsetX = e.clientX - rect.left; offsetY = e.clientY - rect.top;
+    win.style.zIndex = 30;
+  });
+  document.addEventListener('mousemove',(e)=>{
+    if(!isDown) return;
+    win.style.left = (e.clientX - offsetX) + 'px';
+    win.style.top = (e.clientY - offsetY) + 'px';
+  });
+  document.addEventListener('mouseup', ()=> { isDown=false; win.style.cursor='default'; });
+}
+[appsWindow, gamesWindow, notesWindow, filesWindow, musicWindow, settingsWindow].forEach(w=> makeDraggable(w));
+
+/* ---------------------------
+   Viewer / search logic
+   --------------------------- */
+function openInViewer(url){
+  if(!url) return;
+  // if looks like t9os hash wrapper already, keep
+  let final = url;
+  if(!/^https?:\/\//i.test(url) && !url.startsWith('about:')){
+    // treat plain words as search
+    if(url.includes(' ')) {
+      final = `https://t9os.com/active/iframe#https://www.google.com/search?q=${encodeURIComponent(url)}`;
+    } else {
+      // if domain-like
+      final = url.includes('.') ? (url.startsWith('http') ? url : 'https://' + url) : `https://t9os.com/active/iframe#https://www.google.com/search?q=${encodeURIComponent(url)}`;
     }
+  }
+  viewerFrame.src = final;
+  pushTab(final);
+}
 
-    function openGame(url) {
-      window.open(url, "_blank");
-    }
+openUrlBtn.addEventListener('click', ()=> openInViewer(urlInput.value.trim()));
+urlInput.addEventListener('keydown',(e)=> { if(e.key==='Enter') openInViewer(urlInput.value.trim()); });
 
-    function changeWallpaper() {
-      currentWallpaper = (currentWallpaper + 1) % wallpapers.length;
-      document.body.style.backgroundImage = `url(${wallpapers[currentWallpaper]})`;
-    }
-  </script>
+/* ---------------------------
+   Tabs tracking
+   --------------------------- */
+function pushTab(url){
+  openTabs.push(url);
+  openTabsCount.textContent = `Tabs: ${openTabs.length}`;
+}
+
+/* ---------------------------
+   Misc utilities
+   --------------------------- */
+function focusUrlInput(){ urlInput.focus(); }
+
+function openNewT9Tab(){
+  const w = window.open('', '_blank');
+  if(!w){ alert('Popup blocked — allow popups for new tab feature.'); return; }
+  const html = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>T9 Tab</title></head>
+    <body style="margin:0;background:#000"><iframe src="${viewerFrame.src || 'about:blank'}" style="border:0;width:100vw;height:100vh"></iframe></body></html>`;
+  w.document.write(html); w.document.close();
+  pushTab('new-tab');
+}
+
+/* ---------------------------
+   Event wiring
+   --------------------------- */
+
+document.getElementById('openGamesBtn').addEventListener('click', ()=> openWindow('gamesWindow'));
+document.getElementById('openFilesBtn').addEventListener('click', ()=> openWindow('filesWindow'));
+
+openDiscordBtn.addEventListener('click', ()=> openInViewer('https://t9os.com/active/iframe#https://discord.gg/tknXENDkzY'));
+openYouTubeBtn.addEventListener('click', ()=> openInViewer('https://t9os.com/active/iframe#https://www.youtube.com'));
+openPatreonBtn.addEventListener('click', ()=> openInViewer('https://www.patreon.com/c/T9OS'));
+
+document.getElementById('openGamesBtn').addEventListener('click', ()=> openWindow('gamesWindow'));
+document.getElementById('openFilesBtn').addEventListener('click', ()=> openWindow('filesWindow'));
+
+startBtn.addEventListener('click', ()=> {
+  // toggle apps window
+  const el = document.getElementById('appsWindow');
+  el.style.display = el.style.display === 'flex' ? 'none' : 'flex';
+});
+
+document.getElementById('homeBtn').addEventListener('click', ()=> openInViewer(STORAGE.homepage || 'https://t9os.com'));
+
+document.getElementById('openGamesBtn').addEventListener('click', ()=> openWindow('gamesWindow'));
+
+/* notes */
+notesArea.value = STORAGE.notes;
+saveNotesBtn.addEventListener('click', ()=> { localStorage.setItem('t9_notes', notesArea.value); alert('Notes saved'); });
+
+/* files */
+document.querySelectorAll('#filesWindow .appTile').forEach(t=>{
+  t.addEventListener('click', ()=> alert('Pretend opening file: ' + t.dataset.file));
+});
+
+/* music */
+loadAudioBtn.addEventListener('click', ()=> {
+  const url = audioUrlInput.value.trim();
+  if(!url) return alert('Paste an mp3 URL to stream.');
+  audioEl.src = url;
+  audioEl.play().catch(()=>{});
+  localStorage.setItem('t9_audio', url);
+});
+
+/* settings */
+saveSettingsBtn.addEventListener('click', ()=> {
+  const t = themeSelect.value;
+  const w = wallSelect.value;
+  const h = homeUrlInput.value.trim() || STORAGE.homepage;
+  localStorage.setItem('t9_theme', t);
+  localStorage.setItem('t9_wall', w);
+  localStorage.setItem('t9_home', h);
+  STORAGE.theme = t; STORAGE.wallpaper = w; STORAGE.homepage = h;
+  applyTheme(t); applyWallpaper(w);
+  alert('Settings saved');
+});
+resetSettingsBtn.addEventListener('click', ()=> {
+  localStorage.removeItem('t9_theme'); localStorage.removeItem('t9_wall'); localStorage.removeItem('t9_home');
+  STORAGE.theme = 'dark'; STORAGE.wallpaper = WALLPAPERS[0].id; STORAGE.homepage = 'https://t9os.com';
+  renderSettingsOptions(); applyTheme(STORAGE.theme); applyWallpaper(STORAGE.wallpaper);
+  alert('Settings reset');
+});
+
+/* window openers from apps area */
+document.getElementById('openDiscord').addEventListener('click', ()=> openInViewer('https://t9os.com/active/iframe#https://discord.gg/tknXENDkzY'));
+
+/* games open via inner window */
+document.getElementById('gameOpen').addEventListener('click', ()=> {
+  const q = document.getElementById('gameSearch').value.trim();
+  if(!q) return;
+  openInViewer(q);
+});
+
+/* quick expand for apps window */
+document.getElementById('openGamesBtn').addEventListener('click', ()=> openWindow('gamesWindow'));
+
+/* theme toggle button quick */
+themeToggle.addEventListener('click', ()=> {
+  const newTheme = (STORAGE.theme === 'dark') ? 'light' : 'dark';
+  applyTheme(newTheme);
+  localStorage.setItem('t9_theme', newTheme);
+});
+
+/* keyboard shortcuts */
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key.toLowerCase()==='k'){ e.preventDefault(); urlInput.focus(); }
+  if(e.ctrlKey && e.key.toLowerCase()==='n'){ e.preventDefault(); openNewT9Tab(); }
+  if(e.key==='Escape'){ // close topmost window
+    const wins = Array.from(document.querySelectorAll('.window')).filter(w=>w.style.display==='flex');
+    if(wins.length) wins[wins.length-1].style.display='none';
+  }
+});
+
+/* ---------------------------
+   Time & battery
+   --------------------------- */
+function updateTime(){
+  const d = new Date();
+  const t = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  clockEl.textContent = t;
+}
+setInterval(updateTime,1000); updateTime();
+
+if('getBattery' in navigator){
+  navigator.getBattery().then(b=>{
+    function upd(){ batteryEl.textContent = Math.round(b.level*100) + '%'; }
+    upd(); b.addEventListener('levelchange', upd);
+  }).catch(()=> batteryEl.textContent='—%');
+} else batteryEl.textContent='—%';
+
+/* ---------------------------
+   Startup initialization
+   --------------------------- */
+function init(){
+  // apply theme & wallpaper from storage
+  STORAGE.theme = localStorage.getItem('t9_theme') || STORAGE.theme;
+  STORAGE.wallpaper = localStorage.getItem('t9_wall') || STORAGE.wallpaper;
+  STORAGE.homepage = localStorage.getItem('t9_home') || STORAGE.homepage;
+  STORAGE.notes = localStorage.getItem('t9_notes') || STORAGE.notes;
+  STORAGE.audio = localStorage.getItem('t9_audio') || STORAGE.audio;
+
+  applyTheme(STORAGE.theme);
+  renderQuick(); renderAppsGrid(); renderGamesGrid(); renderSettingsOptions();
+  applyWallpaper(STORAGE.wallpaper);
+
+  // load homepage into viewer
+  viewerFrame.src = STORAGE.homepage;
+
+  // set notes and audio if saved
+  notesArea.value = STORAGE.notes;
+  if(STORAGE.audio) { audioEl.src = STORAGE.audio; audioUrlInput.value = STORAGE.audio; }
+
+  // open quick grid actions
+  document.querySelectorAll('.quick').forEach((q,i)=> {
+    q.addEventListener('click', ()=> APPS[i].action());
+  });
+
+  // add games into gamesGrid (already rendered)
+  // populate quick app tiles are already wired
+
+  // wire appsGrid tiles
+  renderAppsGrid();
+
+  // count tabs placeholder
+  openTabsCount.textContent = 'Tabs: 0';
+}
+init();
+
+/* ---------------------------
+   Extras: open apps window when clicking the apps group
+   --------------------------- */
+document.addEventListener('click', (e) => {
+  // double click viewer to focus search
+  if(e.detail === 2 && e.target.closest('.viewerCard')) urlInput.focus();
+});
+
+/* ---------------------------
+   Small accessibility touches
+   --------------------------- */
+document.querySelectorAll('.tinyBtn').forEach(b=> b.addEventListener('keydown', (e)=> {
+  if(e.key==='Enter' || e.key===' ') b.click();
+}));
+
+</script>
 </body>
 </html>
