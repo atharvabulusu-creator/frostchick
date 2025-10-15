@@ -349,26 +349,32 @@ if (selectedBackground) {
 </div>
 
 <style>
-   .tnav {
-    top:0;
-    left:0;
-    height:25px;
-    width:100%;
-    opacity:50%;
-    background-color:black;
-    position:fixed;
-    
-  }
-  .timg{
-    width:17px;
-    transform: translateY(-3px);
-    gap:70px;
-  }
-  .timg:hover{
-    transform: translateY(-4x);
+  .tnav {
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 100%;
+    opacity: 0.5;
+    background-color: black;
+    position: fixed;
 
+    display: flex;        /* make it a flex container */
+    align-items: center;  /* vertically center items */
+    padding-left: 10px;   /* optional padding from the left */
+    gap: 10px;            /* space between images */
+    z-index: 1000;
+}
 
-  }
+.timg {
+    width: 17px;
+    cursor: pointer;
+    transition: transform 0.2s; /* smooth hover */
+}
+
+.timg:hover {
+    transform: translateY(-2px); /* fixed typo and smaller lift */
+}
+
    .clock {
     font: caption;
     right: 30px;
