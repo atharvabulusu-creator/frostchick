@@ -68,6 +68,11 @@
   /* Navbar Styles */
 .navbar {
   position: fixed;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 60px; /* thinner width since it's vertical */
+  height: auto;
   background: linear-gradient(
     145deg,
     rgba(0, 0, 0, 0.842),
@@ -79,40 +84,16 @@
     0 4px 10px rgba(0, 0, 0, 0.4);
   border-radius: 20px;
   display: flex;
+  flex-direction: column; /* now stack items vertically */
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 4px 12px #31313133;
-  opacity: 60%;
-  transition: all 0.4s ease;
-}
-
-/* 🔹 Horizontal (bottom center) */
-.navbar.horizontal {
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  flex-direction: row;
-  width: 250px;
-  height: 50px;
-}
-
-/* 🔹 Vertical (center left) */
-.navbar.vertical {
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
-  flex-direction: column;
-  width: 60px;
-  height: 220px;
+  gap: 10px;
   padding: 10px 0;
+  box-shadow: 0px 4px 12px #31313133;
+  opacity: 0.6;
+  backdrop-filter: blur(8px);
 }
 
-.navbar a {
-  color: white;
-  font-size: 1.3rem;
-  text-decoration: none;
-  transition: 0.2s;
-}
 
 
 
@@ -1286,29 +1267,54 @@ requestAnimationFrame(trackFPS);
 <script>
   const navbar = document.getElementById('navbar');
 
-// Load saved state on page load
+// Load saved state
 window.onload = function() {
-  const savedState = localStorage.getItem('navbarState');
-  if (savedState === 'vertical') {
-    navbar.classList.add('vertical');
-    navbar.classList.remove('horizontal');
+  const saved = localStorage.getItem('navbarState');
+  if (saved === 'vertical') {
+    makeVertical();
   } else {
-    navbar.classList.add('horizontal');
-    navbar.classList.remove('vertical');
+    makeHorizontal();
   }
 };
 
-// Toggle and save
+// Toggle between vertical & horizontal
 function toggleNavbar() {
-  navbar.classList.toggle('vertical');
-  navbar.classList.toggle('horizontal');
+  const isVertical = navbar.dataset.orientation === 'vertical';
+  if (isVertical) {
+    makeHorizontal();
+    localStorage.setItem('navbarState', 'horizontal');
+  } else {
+    makeVertical();
+    localStorage.setItem('navbarState', 'vertical');
+  }
+}
 
-  // Save new state
-  const newState = navbar.classList.contains('vertical') ? 'vertical' : 'horizontal';
-  localStorage.setItem('navbarState', newState);
+function makeHorizontal() {
+  navbar.style.bottom = '10px';
+  navbar.style.left = '50%';
+  navbar.style.top = '';
+  navbar.style.transform = 'translateX(-50%)';
+  navbar.style.flexDirection = 'row';
+  navbar.style.width = '250px';
+  navbar.style.height = '50px';
+  navbar.style.padding = '0';
+  navbar.dataset.orientation = 'horizontal';
+}
+
+function makeVertical() {
+  navbar.style.top = '50%';
+  navbar.style.left = '15px';
+  navbar.style.bottom = '';
+  navbar.style.transform = 'translateY(-50%)';
+  navbar.style.flexDirection = 'column';
+  navbar.style.width = '60px';
+  navbar.style.height = '220px';
+  navbar.style.padding = '10px 0';
+  navbar.dataset.orientation = 'vertical';
 }
 
 </script>
+
 
 <script>
     const presetSelect = document.getElementById("preset");
