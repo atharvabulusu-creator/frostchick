@@ -331,11 +331,13 @@ if (selectedBackground) {
 
  
 
-  <h2 class="battery" id="batteryPercentage"></h2>
-  <div class="clock" id="time"></div>
-
+ 
 
 </div>
+
+ <h2 class="battery" id="batteryPercentage"></h2>
+  <div class="clock" id="time"></div>
+
 
 <style>
   .tnav {
@@ -370,29 +372,30 @@ if (selectedBackground) {
 
 }
 
-   .clock {
-    font: caption;
-    right: 30px;
-    color: white;
-    font-size: 15px;
-    position: fixed;
-    top:5px;
-  }
+  .clock {
+  color: white;
+  font-size: 35px;
+  position: fixed;
+  top: 40px;
+  left: 60px;
+  text-shadow: 0 0 10px #00ffff;
+  font-family: 'Orbitron', sans-serif;
+}
+
 
   /* Battery Styles */
   .battery {
     
-  font: caption;
-  right: 185px;
-  color: white;
-  position: absolute;
-  top: 0;
+color: white;
   font-size: 15px;
-  line-height: 1;
-  /* Optional: if you still need fine adjustment */
-  transform: translateY(-5px);
-}
+  position: fixed;
+  top: 65px;
+  left: 60px;
+  text-shadow: 0 0 10px #00ffff;
+  font-family: 'Orbitron', sans-serif;
 
+
+  }
 </style>
 <script>
   function updateTime() {
