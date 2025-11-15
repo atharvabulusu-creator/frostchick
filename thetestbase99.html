@@ -1852,40 +1852,42 @@ if (selectedBackground) {
 
 
 <script>
-  const box = document.querySelector('#settingsDiv');
+ const box = document.getElementById('settingsDiv');
 
 box.addEventListener('pointerdown', e => {
     e.preventDefault();
 
-    // Required so drag never disconnects
     box.setPointerCapture(e.pointerId);
+    box.style.cursor = "grabbing";
 
-    box.style.cursor = 'grabbing';
-
-    // Remove centering (inset + margin auto) so dragging works
-    box.style.inset = 'unset';
-    box.style.margin = '0';
-
-    // Calculate offset inside the box
+    // Get current position and size
     const rect = box.getBoundingClientRect();
+
+    // Calculate pointer offset inside the div
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
+
+    // Convert the centered div to fixed left/top so it can move
+    box.style.left = rect.left + "px";
+    box.style.top = rect.top + "px";
+    box.style.inset = "auto"; // allow left/top to take effect
+    box.style.margin = "0";
 
     function handleMove(e) {
         let newX = e.clientX - offsetX;
         let newY = e.clientY - offsetY;
 
-        // Keep inside screen
+        // Keep inside viewport
         newX = Math.max(0, Math.min(newX, window.innerWidth - box.offsetWidth));
         newY = Math.max(0, Math.min(newY, window.innerHeight - box.offsetHeight));
 
-        box.style.left = newX + 'px';
-        box.style.top = newY + 'px';
+        box.style.left = newX + "px";
+        box.style.top = newY + "px";
     }
 
     function handleUp(e) {
         box.releasePointerCapture(e.pointerId);
-        box.style.cursor = 'grab';
+        box.style.cursor = "grab";
 
         box.removeEventListener('pointermove', handleMove);
         box.removeEventListener('pointerup', handleUp);
@@ -1894,6 +1896,7 @@ box.addEventListener('pointerdown', e => {
     box.addEventListener('pointermove', handleMove);
     box.addEventListener('pointerup', handleUp);
 });
+
 
 </script>
 
