@@ -1852,80 +1852,82 @@ if (selectedBackground) {
 
 
 <script>
-const box = document.getElementById('settingsDiv');
-const DRAG_HEIGHT = 50; // top 50px is draggable
+const DRAG_HEIGHT = 50; // top area draggable
 
-let isDragging = false;
-let offsetX = 0;
-let offsetY = 0;
+// List the divs manually
+const divs = [
+    document.getElementById('settingsDiv'),
+    document.getElementById('aiDiv'),
+    document.getElementById('settingsDiv3')
+];
 
-// Handle cursor while hovering
-box.addEventListener('pointermove', e => {
-    const rect = box.getBoundingClientRect();
-    const offsetYInDiv = e.clientY - rect.top;
+divs.forEach(box => {
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
 
-    if (isDragging) {
+    // Update cursor when hovering top
+    box.addEventListener('pointermove', e => {
+        const rect = box.getBoundingClientRect();
+        const offsetYInDiv = e.clientY - rect.top;
+
+        if (isDragging) {
+            box.style.cursor = 'grabbing';
+        } else if (offsetYInDiv <= DRAG_HEIGHT) {
+            box.style.cursor = 'grab';
+        } else {
+            box.style.cursor = 'default';
+        }
+    });
+
+    // Start drag
+    box.addEventListener('pointerdown', e => {
+        const rect = box.getBoundingClientRect();
+        const offsetYInDiv = e.clientY - rect.top;
+
+        if (offsetYInDiv > DRAG_HEIGHT) return;
+
+        isDragging = true;
+        offsetX = e.clientX - rect.left;
+        offsetY = offsetYInDiv;
+
+        box.style.inset = 'auto';
+        box.style.margin = '0';
+        box.style.left = rect.left + 'px';
+        box.style.top = rect.top + 'px';
+
         box.style.cursor = 'grabbing';
-    } else if (offsetYInDiv <= DRAG_HEIGHT) {
-        box.style.cursor = 'grab';
-    } else {
-        box.style.cursor = 'default';
-    }
+    });
+
+    // Dragging
+    document.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+
+        let newX = e.clientX - offsetX;
+        let newY = e.clientY - offsetY;
+
+        newX = Math.max(0, Math.min(newX, window.innerWidth - box.offsetWidth));
+        newY = Math.max(0, Math.min(newY, window.innerHeight - box.offsetHeight));
+
+        box.style.left = newX + 'px';
+        box.style.top = newY + 'px';
+    });
+
+    // Stop dragging
+    document.addEventListener('pointerup', e => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const rect = box.getBoundingClientRect();
+        const offsetYInDiv = e.clientY - rect.top;
+
+        if (offsetYInDiv <= DRAG_HEIGHT) {
+            box.style.cursor = 'grab';
+        } else {
+            box.style.cursor = 'default';
+        }
+    });
 });
-
-// Start dragging only from top area
-box.addEventListener('pointerdown', e => {
-    const rect = box.getBoundingClientRect();
-    const offsetYInDiv = e.clientY - rect.top;
-
-    if (offsetYInDiv > DRAG_HEIGHT) return; // not top area
-
-    isDragging = true;
-    offsetX = e.clientX - rect.left;
-    offsetY = offsetYInDiv;
-
-    // Convert centered div to draggable left/top
-    box.style.inset = 'auto';
-    box.style.margin = '0';
-    box.style.left = rect.left + 'px';
-    box.style.top = rect.top + 'px';
-
-    box.style.cursor = 'grabbing';
-});
-
-// Dragging
-document.addEventListener('pointermove', e => {
-    if (!isDragging) return;
-
-    let newX = e.clientX - offsetX;
-    let newY = e.clientY - offsetY;
-
-    newX = Math.max(0, Math.min(newX, window.innerWidth - box.offsetWidth));
-    newY = Math.max(0, Math.min(newY, window.innerHeight - box.offsetHeight));
-
-    box.style.left = newX + 'px';
-    box.style.top = newY + 'px';
-});
-
-// Stop dragging
-document.addEventListener('pointerup', () => {
-    if (!isDragging) return;
-    isDragging = false;
-
-    // Reset cursor depending on pointer position
-    const rect = box.getBoundingClientRect();
-    const pointerY = window.event?.clientY || 0;
-    const offsetYInDiv = pointerY - rect.top;
-
-    if (offsetYInDiv <= DRAG_HEIGHT) {
-        box.style.cursor = 'grab';
-    } else {
-        box.style.cursor = 'default';
-    }
-});
-
-
-
 
 
 
