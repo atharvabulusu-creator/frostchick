@@ -1852,32 +1852,35 @@ if (selectedBackground) {
 
 
    <script>
-        document.querySelectorAll('#settingsDiv').forEach(box => {
-            box.addEventListener('pointerdown', e => {
-                e.preventDefault();
-                box.style.cursor = 'grabbing';
-                let offsetX = e.clientX - box.getBoundingClientRect().left;
-                let offsetY = e.clientY - box.getBoundingClientRect().top;
+const box = document.querySelector('#settingsDiv');
 
-                function handleMove(e) {
-                    let newX = e.clientX - offsetX;
-                    let newY = e.clientY - offsetY;
-                    
-                    box.style.left = `${Math.max(0, Math.min(newX, window.innerWidth - box.offsetWidth))}px`;
-                    box.style.top = `${Math.max(0, Math.min(newY, window.innerHeight - box.offsetHeight))}px`;
-                }
+box.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    box.style.cursor = 'grabbing';
 
-                function handleUp() {
-                    box.style.cursor = 'grab';
-                    window.removeEventListener('pointermove', handleMove);
-                    window.removeEventListener('pointerup', handleUp);
-                }
+    let rect = box.getBoundingClientRect();
+    let offsetX = e.clientX - rect.left;
+    let offsetY = e.clientY - rect.top;
 
-                window.addEventListener('pointermove', handleMove);
-                window.addEventListener('pointerup', handleUp);
-            });
-        });
-    </script>
+    function handleMove(e) {
+        let newX = e.clientX - offsetX;
+        let newY = e.clientY - offsetY;
+
+        box.style.left = Math.max(0, Math.min(newX, window.innerWidth - box.offsetWidth)) + 'px';
+        box.style.top  = Math.max(0, Math.min(newY, window.innerHeight - box.offsetHeight)) + 'px';
+    }
+
+    function handleUp() {
+        box.style.cursor = 'grab';
+        window.removeEventListener('pointermove', handleMove);
+        window.removeEventListener('pointerup', handleUp);
+    }
+
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+});
+</script>
+
 
 </body>
 
