@@ -1852,8 +1852,8 @@ if (selectedBackground) {
 
 
 <script>
-const DRAG_HEIGHT = 50; // Top area draggable
-const RESIZE_MARGIN = 10; // Pixels from edge to start resizing
+const DRAG_HEIGHT = 50;
+const RESIZE_MARGIN = 10;
 
 const divs = [
     document.getElementById('settingsDiv'),
@@ -1871,25 +1871,28 @@ divs.forEach(box => {
     let offsetX = 0;
     let offsetY = 0;
 
+    // Store initial size/position when resizing
+    let startWidth = 0;
+    let startHeight = 0;
+    let startLeft = 0;
+    let startTop = 0;
+    let startMouseX = 0;
+    let startMouseY = 0;
+
     function getResizeDirection(e) {
         const rect = box.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
         let dir = '';
         if (x < RESIZE_MARGIN) dir += 'w';
         else if (x > rect.width - RESIZE_MARGIN) dir += 'e';
-
         if (y < RESIZE_MARGIN) dir += 'n';
         else if (y > rect.height - RESIZE_MARGIN) dir += 's';
-
         return dir;
     }
 
-    // Update cursor
     box.addEventListener('pointermove', e => {
         if (isDragging || isResizing) return;
-
         const rect = box.getBoundingClientRect();
         const offsetYInDiv = e.clientY - rect.top;
         const dir = getResizeDirection(e);
@@ -1902,19 +1905,7 @@ divs.forEach(box => {
     box.addEventListener('pointerdown', e => {
         const rect = box.getBoundingClientRect();
         const offsetYInDiv = e.clientY - rect.top;
-
         const dir = getResizeDirection(e);
-        if (dir) {
-            isResizing = true;
-            resizeDir = dir;
-            // Only set explicit width/height when resizing
-            box.style.width = rect.width + 'px';
-            box.style.height = rect.height + 'px';
-        } else if (offsetYInDiv <= DRAG_HEIGHT) {
-            isDragging = true;
-            offsetX = e.clientX - rect.left;
-            offsetY = offsetYInDiv;
-        } else return;
 
         document.body.style.userSelect = 'none';
         box.style.inset = 'auto';
@@ -1922,12 +1913,31 @@ divs.forEach(box => {
         box.style.left = rect.left + 'px';
         box.style.top = rect.top + 'px';
 
+        if (dir) {
+            // Start resizing
+            isResizing = true;
+            resizeDir = dir;
+
+            startWidth = rect.width;
+            startHeight = rect.height;
+            startLeft = rect.left;
+            startTop = rect.top;
+            startMouseX = e.clientX;
+            startMouseY = e.clientY;
+
+            box.style.width = startWidth + 'px';
+            box.style.height = startHeight + 'px';
+        } else if (offsetYInDiv <= DRAG_HEIGHT) {
+            // Start dragging
+            isDragging = true;
+            offsetX = e.clientX - rect.left;
+            offsetY = offsetYInDiv;
+        } else return;
+
         box.style.cursor = isDragging ? 'grabbing' : dir + '-resize';
     });
 
     document.addEventListener('pointermove', e => {
-        const rect = box.getBoundingClientRect();
-
         // Drag
         if (isDragging) {
             let newX = e.clientX - offsetX;
@@ -1940,41 +1950,44 @@ divs.forEach(box => {
 
         // Resize
         if (isResizing) {
-            let newLeft = rect.left;
-            let newTop = rect.top;
-            let newWidth = rect.width;
-            let newHeight = rect.height;
+            let deltaX = e.clientX - startMouseX;
+            let deltaY = e.clientY - startMouseY;
 
-            if (resizeDir.includes('e')) newWidth = e.clientX - rect.left;
-            if (resizeDir.includes('s')) newHeight = e.clientY - rect.top;
+            let newWidth = startWidth;
+            let newHeight = startHeight;
+            let newLeft = startLeft;
+            let newTop = startTop;
+
+            if (resizeDir.includes('e')) newWidth = startWidth + deltaX;
+            if (resizeDir.includes('s')) newHeight = startHeight + deltaY;
             if (resizeDir.includes('w')) {
-                newWidth = rect.right - e.clientX;
-                newLeft = e.clientX;
+                newWidth = startWidth - deltaX;
+                newLeft = startLeft + deltaX;
             }
             if (resizeDir.includes('n')) {
-                newHeight = rect.bottom - e.clientY;
-                newTop = e.clientY;
+                newHeight = startHeight - deltaY;
+                newTop = startTop + deltaY;
             }
 
+            // Minimum size
             newWidth = Math.max(50, newWidth);
             newHeight = Math.max(50, newHeight);
 
-            box.style.left = newLeft + 'px';
-            box.style.top = newTop + 'px';
             box.style.width = newWidth + 'px';
             box.style.height = newHeight + 'px';
+            box.style.left = newLeft + 'px';
+            box.style.top = newTop + 'px';
         }
     });
 
     document.addEventListener('pointerup', () => {
-        if (isDragging || isResizing) {
-            isDragging = false;
-            isResizing = false;
-            document.body.style.userSelect = '';
-        }
+        isDragging = false;
+        isResizing = false;
+        document.body.style.userSelect = '';
     });
 });
 </script>
+
 
 
 
