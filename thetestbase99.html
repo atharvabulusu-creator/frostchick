@@ -1858,7 +1858,7 @@ const RESIZE_EDGE = 12;
 const MIN_W = 180;
 const MIN_H = 120;
 
-const ids = ['settingsDiv','aiDiv','hiddenDiv','updateDiv','searchDiv','ChatDiv'];
+const ids = ['settingsDiv', 'aiDiv', 'hiddenDiv', 'updateDiv', 'searchDiv', 'ChatDiv'];
 const windows = ids.map(id => document.getElementById(id)).filter(Boolean);
 
 // Utility function to parse CSS transform translate values
@@ -1877,26 +1877,35 @@ function parseTranslate(transform) {
   return [0,0];
 }
 
-// Function to convert CSS inset/transform based position to fixed left/top
-function normalizePosition(win) {
-  const cs = getComputedStyle(win);
-  if (win.style.inset === 'auto' && cs.transform === 'none') return;
-  
-  const rect = win.getBoundingClientRect();
-  const [tx,ty] = parseTranslate(cs.transform);
-  
-  // Calculate final absolute position, accounting for scroll
-  const finalX = rect.left + tx + window.scrollX;
-  const finalY = rect.top + ty + window.scrollY;
+// Function to stabilize the position and clear conflicting CSS
+// This function is now ONLY called on pointerdown
+function stabilizePosition(win) {
+    const currentRect = win.getBoundingClientRect();
+    const cs = getComputedStyle(win);
+    const [tx, ty] = parseTranslate(cs.transform);
 
-  win.style.left = Math.round(finalX) + 'px';
-  win.style.top  = Math.round(finalY) + 'px';
-  win.style.inset='auto';
-  win.style.margin='0';
-  win.style.transform='none';
+    // Calculate the absolute position
+    const absoluteX = currentRect.left + tx + window.scrollX;
+    const absoluteY = currentRect.top + ty + window.scrollY;
+    
+    // Apply stable CSS properties
+    win.style.position = 'fixed'; // Use fixed position to counter initial CSS
+    win.style.left = Math.round(absoluteX) + 'px';
+    win.style.top  = Math.round(absoluteY) + 'px';
+    win.style.width = currentRect.width + 'px';
+    win.style.height = currentRect.height + 'px';
+
+    // Clear conflicting CSS properties
+    win.style.inset = 'auto'; 
+    win.style.margin = '0'; 
+    win.style.transform = 'none';
 }
 
-windows.forEach(win=>{
+
+windows.forEach(win => {
+  // *** We NO LONGER stabilize position here ***
+  // stabilizePosition(win); // This was the line causing the error
+
   let dragging=false, resizing=false, resizeDir='';
   let grabOffset={x:0,y:0};
   let start={};
@@ -1908,11 +1917,10 @@ windows.forEach(win=>{
     const y = e.clientY - r.top;
     let dir = '';
     
-    // Check for bottom resize (South)
     if (y > r.height - RESIZE_EDGE) {
       dir += 's';
-      if (x > r.width - RESIZE_EDGE) dir += 'e'; // SouthEast
-      else if (x < RESIZE_EDGE) dir += 'w'; // SouthWest
+      if (x > r.width - RESIZE_EDGE) dir += 'e'; 
+      else if (x < RESIZE_EDGE) dir += 'w'; 
     }
     return dir;
   }
@@ -1929,7 +1937,6 @@ windows.forEach(win=>{
     }
     
     const r=win.getBoundingClientRect();
-    // Check for draggable area (top DRAG_HEIGHT)
     if (e.clientY - r.top <= DRAG_HEIGHT) {
       win.style.cursor='grab';
     } else {
@@ -1942,16 +1949,16 @@ windows.forEach(win=>{
     
     const rect = win.getBoundingClientRect();
     const dir = getResizeDir(e);
-    
     const isDragZone = (e.clientY - rect.top <= DRAG_HEIGHT);
     
-    // 🔥 CRITICAL FIX: Only run normalization and capture if the click is in a drag or resize zone
-    if (dir || isDragZone) {
-      normalizePosition(win); 
-    } else {
-      // If the user clicks in the middle of the window (neither drag nor resize), do nothing.
-      return; 
+    if (!dir && !isDragZone) {
+      return; // Do nothing if click is in the non-active body
     }
+
+    // *** THIS IS THE FIX ***
+    // We now stabilize the position ONLY when the user clicks,
+    // guaranteeing the element is visible and has a real position.
+    stabilizePosition(win); 
     
     if (dir) {
       // START RESIZING
@@ -2002,15 +2009,11 @@ windows.forEach(win=>{
       // --- CONSTRAINTS ---
       
       if (newW < MIN_W) {
-        if (resizeDir.includes('w')) {
-          newL = start.startL + (start.startW - MIN_W);
-        }
+        if (resizeDir.includes('w')) { newL = start.startL + (start.startW - MIN_W); }
         newW = MIN_W;
       }
       
-      if (newH < MIN_H) {
-        newH = MIN_H;
-      }
+      if (newH < MIN_H) { newH = MIN_H; }
       
       if (newL < 0) {
         if (resizeDir.includes('w')) newW += newL;
@@ -2047,7 +2050,7 @@ windows.forEach(win=>{
 
 
 
-<!--FIXED SCRIP 11-->
+<!--FIXED SCRIP 12-->
 
 
 
