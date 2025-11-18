@@ -13,9 +13,54 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #0a0e27;
     min-height: 100vh;
     color: white;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(ellipse at top, #1b2735 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, #090a0f 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, #5b247a 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, #1c92d2 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, #f46b45 0%, transparent 40%);
+    z-index: -2;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20% 30%, white, transparent),
+      radial-gradient(2px 2px at 60% 70%, white, transparent),
+      radial-gradient(1px 1px at 50% 50%, white, transparent),
+      radial-gradient(1px 1px at 80% 10%, white, transparent),
+      radial-gradient(2px 2px at 90% 60%, white, transparent),
+      radial-gradient(1px 1px at 33% 80%, white, transparent),
+      radial-gradient(1px 1px at 15% 60%, white, transparent);
+    background-size: 200% 200%, 300% 300%, 250% 250%, 280% 280%, 180% 180%, 220% 220%, 260% 260%;
+    background-position: 0% 0%, 20% 30%, 40% 50%, 60% 70%, 80% 10%, 90% 60%, 33% 80%;
+    animation: twinkle 8s ease-in-out infinite;
+    opacity: 0.6;
+    z-index: -1;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
   }
 
   #searchBar {
@@ -37,18 +82,11 @@
     transition: transform 0.2s ease;
   }
 
-  #searchBar:focus {
-    transform: translateX(-50%) scale(1.02);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  }
-
   #imageContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
     padding: 80px 20px 30px;
-    max-width: 1400px;
-    margin: 0 auto;
   }
 
   .game-card {
@@ -151,6 +189,11 @@
 <div id="imageContainer">
   <div class="no-results" id="noResults">No games found</div>
   
+  <!-- Info Links First -->
+  <a href="https://forms.gle/idyRqPcwSoj5Mmjv6" class="game-card medium" data-title="Request a Game"><img src="request.png" alt="Request"></a>
+  <a href="/terms" class="game-card small" data-title="Terms"><img src="TERM.png" alt="Terms"></a>
+  <a href="https://forms.gle/17gCot1LnhMJghiT7" class="game-card small" data-title="DMCA"><img src="dmca.png" alt="DMCA"></a>
+  
   <!-- Featured/Large Games -->
   <a href="/minecraft" class="game-card large" data-title="Minecraft"><img src="mine2.png" alt="Minecraft"></a>
   <a href="/rooftop2" class="game-card large" data-title="Rooftop Snipers 2"><img src="rooftop2.png" alt="Rooftop Snipers 2"></a>
@@ -160,7 +203,6 @@
   <!-- Medium Games -->
   <a href="/miami" class="game-card medium" data-title="Hotline Miami"><img src="miami.png" alt="Hotline Miami"></a>
   <a href="/wheelie" class="game-card medium" data-title="Wheelie Bike 2"><img src="wheelie.png" alt="Wheelie Bike 2"></a>
-  <a href="https://forms.gle/idyRqPcwSoj5Mmjv6" class="game-card medium" data-title="Request a Game"><img src="request.png" alt="Request"></a>
   
   <!-- Regular Games -->
   <a href="/shell" class="game-card small" data-title="Shell Shockers"><img src="shell.png" alt="Shell Shockers"></a>
@@ -283,10 +325,6 @@
   <a href="/worldcup" class="game-card small" data-title="World Cup"><img src="worldcup.png" alt="World Cup"></a>
   <a href="/snakeio" class="game-card small" data-title="Snake.io"><img src="snakeio.png" alt="Snake.io"></a>
   <a href="/speedstars" class="game-card small" data-title="Speed Stars"><img src="speedstars.png" alt="Speed Stars"></a>
-  
-  <!-- Info Links -->
-  <a href="/terms" class="game-card small" data-title="Terms"><img src="TERM.png" alt="Terms"></a>
-  <a href="https://forms.gle/17gCot1LnhMJghiT7" class="game-card small" data-title="DMCA"><img src="dmca.png" alt="DMCA"></a>
 </div>
 
 <script>
